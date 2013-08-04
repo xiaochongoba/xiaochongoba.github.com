@@ -1,11 +1,349 @@
-　　---
-　　layout: default
-　　title: 我的Blog
-　　---
-　　<h2>{{ page.title }}</h2>
-　　<p>最新文章</p>
-　　<ul>
-　　　　{% for post in site.posts %}
-　　　　　　<li>{{ post.date | date_to_string }} <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
-　　　　{% endfor %}
-　　</ul>
+<!DOCTYPE HTML>
+<html>
+<title>
+</title>
+<head>
+	<!--css样式设置-->
+	<style type="text/css">
+		.class1{
+			font-family: Georgia;
+			font-size:15px;
+			color:red;
+			}		
+		#canvasDiv{
+			position:absolute;
+			}
+		#myCanvas{
+			cursor:url(pen.cur),default;
+			border-style: solid;
+			border-color: green green green green;
+			position:absolute; 			 
+			}
+		#toolsDiv{
+			width:50px;
+			height:60px;
+			position:absolute;
+			top:20px;
+			left:1050px;
+			}
+		#lineWidthDiv{
+			width:100px;
+			height:60px;
+			position:absolute;
+			top:20px;
+			left:1215px;
+			}
+		#lineW{
+			width:80px;
+			height:20px;
+			position:absolute;
+			top:38px;
+			}
+		#colorDiv{
+			width:50px;
+			height:60px;
+			position:absolute;
+			top:20px;
+			left:1130px;
+			}		
+		#buttonDiv{
+			width:100px;
+			height:100px;
+			position:absolute;
+			top:55px;
+			left:1310px;
+			}
+		#imageDiv{
+			width:250px;
+			height:200px;
+			border-style: solid;
+			border-color: green green green green;
+			position:absolute;
+			top:120px;
+			left:1050px;
+			}
+		#buttonDiv2{
+			width:150px;
+			height:100px;
+			position:absolute;
+			top:55px;
+			left:1390px;
+			}
+		#tipsDiv{
+			width:600px;
+			height:400px;
+			border-style: solid;
+			border-color: green green green green;
+			position:absolute;
+			top:400px;
+			left:1050px;
+			}
+		#copyrightDiv{
+			background-color:gray;
+			width:1680px;
+			height:30px;
+			position:absolute;
+			top:900px;
+			left:0px;
+			}
+		#copyright{
+			position:absolute;
+			left:650px;
+			}
+	</style>
+	<script type="text/javascript" src="jquery-1.6.4.min.js"></script>
+</head>
+<body >
+	<!--添加HTML5 canvas控件-->
+	<div id="canvasDiv" onselectstart="return false"">
+	<canvas id="myCanvas" width=1000; height=800; onmousedown="MouseDown(event)" onmousemove="MouseMove(event)" onmouseup="MouseUp(event)">
+		你的浏览器不太兼容^_^，可以换用IE7以上版本或谷歌浏览器5以上版本。
+	</canvas>
+	</div>
+	<div id="lineWidthDiv" class="class1">
+	<br>线宽：</br>
+	<select onchange="IsLinewSelected(this.value);" id="lineW"> 	  
+          <option value="1">1</option> 
+          <option value="2" >2</option> 
+          <option value="3" >3</option>
+          <option value="4" >4</option>
+          <option value="5" >5</option>
+          <option value="6" >10</option>
+          <option value="7" >15</option>
+	  <option value="8" >20</option>
+          <option value="9" >25</option>
+	  <option value="10" >30</option>
+	  <option value="11" >35</option>
+	  <option value="12" >40</option>
+ 	</select> 
+	</div>
+	<div id="colorDiv" class="class1">
+	<br>颜色：</br>
+	<select onchange="IsColorSelected(this.value);" id="color"> 	  
+          <option value="1">black</option> 
+          <option value="2" >green</option> 
+          <option value="3" >blue</option>
+          <option value="4" >gray</option>
+          <option value="5" >lime</option>
+          <option value="6" >maroon</option>
+          <option value="7" >navy</option>
+	  <option value="8" >olive</option>
+          <option value="9" >purple</option>
+	  <option value="10" >red</option>
+	  <option value="11" >silver</option>
+	  <option value="12" >yellow</option>
+ 	</select> 
+	</div>
+	<div id="toolsDiv" class="class1">
+	<br>工具：</br>
+	<select onchange="IsToolsSelected(this.value);" id="tools"> 	  
+          <option value="1">画笔</option> 
+          <option value="2" >橡皮擦</option> 
+          <option value="3" >清屏</option>         
+ 	</select> 
+	</div>
+	<div id="buttonDiv">
+	<button type="button" onclick="GeneratePic()">生成图片</button>
+	</div>
+	<div id="imageDiv" class="class1">
+	<img id="imageOne" src="" height=200 width=250 alt="等待生成图片ing">
+	</div>
+	<div id="buttonDiv2">
+	<button type="button" onclick="GetCookie()">分享</button>
+	</div>
+	<div id="tipsDiv" class="class1">
+	</br>
+	<label id="visitor">
+	欢迎来到“画语”世界,亲爱的访客!
+	</label>
+	<p>1.您可以在左边的画板上画上任意您想画的东西，然后点击生成图片、分享按钮，将您的“画语”分享给大家。</p>
+	<p>2.您可以进行登录，将您的图片保存在网站上。如果没有账号，请进行注册。<a href="register.html">【点我注册】</a>(未开通)</p>	
+	</br></br>
+	<p>(未开通)</p>
+	<form action="account.php" method="post">
+  	Name: <input type="text" name="name" />
+  	Password: <input type="text" name="pwd" />
+  	<input type="submit" value="登录" />	
+	</form>
+	
+	</div>
+	<div id="copyrightDiv">
+	<span id="copyright">CopyRight @2013 XiaoChong    Version 1.0</span>
+	</div>
+
+<!--JS脚本 实现检查cookie验证用户登录、绘图功能-->
+<script type="text/javascript" charset="utf-8">
+		
+		var tempName="";
+		var nameEQ = "dwname" + "=";
+ 		var ca = document.cookie.split(';');
+		var flag = false;
+ 		for(var i=0;i < ca.length;i++){
+		var c = ca[i];
+ 		if(c.indexOf(nameEQ)==0)
+		{
+			tempName=decodeURIComponent(c.substring(nameEQ.length,c.length));
+			if(tempName==" ")
+			{
+			alert("未成功登陆^_^##");
+			break;	
+			}
+			else
+			{
+			flag = true;
+			document.getElementById("visitor").innerHTML="欢迎来到“画语”世界,亲爱的"+tempName+"!";
+			break;	
+			}	
+		}
+		if(flag == false) ;
+		//alert("未成功登陆^_^##");
+ 		}
+
+
+		function GetCookie() 
+		{ 
+    		var nameEQ = "filecookie" + "=";
+ 		var ca = document.cookie.split(';');
+		var flag = false;
+ 		for(var i=0;i < ca.length;i++){
+		var cc = ca[i];
+	/*	while (cc.charAt(0)=='') 
+		cc=cc.substring(1,c.length);*/
+ 		if(cc.indexOf(nameEQ)==0)
+		{
+		var tempUrl=decodeURIComponent(cc.substring(nameEQ.length,cc.length));
+		if(tempUrl=="")
+		{
+		alert(tempUrl);
+		break;	
+		}
+		else
+		{
+		flag = true;
+		window.location.href="share.html";
+		break;	
+		}	
+		}
+		if(flag == false)
+		alert("图片未生成^_^##");
+ 		}	
+		}
+		<!--实现绘图功能函数-->
+		var c=document.getElementById("myCanvas");
+		var cxt=c.getContext("2d");
+		cxt.strokeStyle="black";
+		cxt.lineWidth=1;
+		var xStart,yStart;
+		var cursorStyle="url(pen.cur),default";
+		var checkDrawing=false;
+		var drawType="画笔";
+		var dataUrl="";
+		var offset=10;
+		var eraserWidth=5;
+
+		function MouseDown(e)
+		{
+			xStart=e.clientX-offset;
+			yStart=e.clientY-offset;
+			checkDrawing=true;			
+		}
+		function MouseMove(e)
+		{
+		if(checkDrawing)
+		{
+			if(drawType=="画笔")
+			{
+			cxt.beginPath();
+			cxt.moveTo(xStart,yStart);
+			cxt.lineTo(e.clientX-offset,e.clientY-offset);
+			cxt.stroke();
+			cxt.closePath();
+			xStart=e.clientX-offset;
+			yStart=e.clientY-offset;
+			}
+			if(drawType=="橡皮擦")
+			{
+			xStart=e.clientX-offset;
+			yStart=e.clientY-offset;
+			Eraser(e);
+			}
+				
+		}
+		}
+		function Eraser(e)
+		{
+			checkDrawing=true;
+			cxt.clearRect(xStart-eraserWidth,yStart-eraserWidth,e.clientX-xStart+eraserWidth,e.clientY-yStart+eraserWidth);
+			xStart=e.clientX-offset;
+			yStart=e.clientY-offset;
+		}
+		function MouseUp(e)
+		{
+			checkDrawing=false;
+		}
+
+		function IsLinewSelected(value)
+		{
+			if(drawType=="画笔")
+			{
+			var lineW = document.getElementById("lineW");
+			cxt.lineWidth=lineW.options[lineW.selectedIndex].innerText;
+			}
+			if(drawType=="橡皮擦")
+			{
+			var lineW = document.getElementById("lineW");
+			}
+		}
+		function IsColorSelected(value)
+		{
+			var color = document.getElementById("color");
+			cxt.strokeStyle=color.options[color.selectedIndex].innerText;
+		}
+		function IsToolsSelected(value)
+		{
+			var color = document.getElementById("tools");
+			drawType=tools.options[tools.selectedIndex].innerText;
+			if(drawType=="画笔")
+			cursorStyle="url(pen.cur),default";
+			if(drawType=="橡皮擦")
+			cursorStyle="url(eraser.cur),default";
+			c.style.cursor=cursorStyle;
+			if(drawType=="清屏")
+			{
+			cxt.clearRect(0,0,1000,800);
+			}
+		}
+		function GeneratePic()
+		{		
+		dataUrl = c.toDataURL('image/png');
+		$.post('./test.php',{ 'data' : dataUrl });
+		document.getElementById("imageOne").src = dataUrl;
+		//alert(document.getElementById("imageOne").src);
+		}
+		
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
